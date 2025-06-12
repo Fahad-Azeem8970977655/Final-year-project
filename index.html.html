@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Matching Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button class="high-contrast-toggle" id="highContrastToggle">High Contrast Mode</button>
+    <button class="parent-toggle" id="parentToggle">Parent</button>
+    <button class="dashboard-btn" id="dashboardBtn">Dashboard</button>
+    
+    <div class="parent-panel" id="parentPanel">
+        <h3>Parent Settings</h3>
+        <div>
+            <label>
+                <input type="checkbox" id="animationsToggle" checked> Animations
+            </label>
+        </div>
+        <div>
+            <label>
+                <input type="checkbox" id="practiceModeToggle"> Practice Mode
+            </label>
+        </div>
+        <div>
+            <label>
+                Number of options:
+                <select id="optionsCount">
+                    <option value="2">2</option>
+                    <option value="4" selected>4</option>
+                </select>
+            </label>
+        </div>
+        <div>
+            <label>
+                Time per question (seconds):
+                <input type="number" id="timePerQuestion" min="5" max="60" value="15">
+            </label>
+        </div>
+        <button id="saveParentSettings">Save</button>
+    </div>
+    
+    <div class="welcome-screen" id="welcomeScreen">
+        <h1>Let's Learn Animals!</h1>
+        <p>Match the animal name with the correct picture.</p>
+        <p>Have fun!</p>
+        <button id="startGameBtn">Start Game</button>
+    </div>
+    
+    <div class="pause-screen" id="pauseScreen">
+        <h2 style="color: white;">Take a Break</h2>
+        <div class="breathing-circle"></div>
+        <p style="color: white;">Breathe in and out with the circle</p>
+        <div class="emotion-buttons">
+            <button class="emotion-btn" id="happyBtn">😊</button>
+            <button class="emotion-btn" id="neutralBtn">😐</button>
+            <button class="emotion-btn" id="sadBtn">😢</button>
+        </div>
+        <button id="resumeBtn" style="margin-top: 20px;">Ready to Continue</button>
+    </div>
+
+    <div class="transition-screen" id="transitionScreen">
+        <div class="transition-message">Next animal coming up...</div>
+        <div class="countdown-timer" id="countdownTimer">3</div>
+    </div>
+
+    <div class="container">
+        <div class="practice-mode-indicator" id="practiceModeIndicator">Practice Mode</div>
+        
+        <h1>Animal Matching Quiz</h1>
+
+        <div class="visual-schedule" id="visualSchedule">
+            <!-- Schedule items will be added here -->
+        </div>
+
+        <div class="settings">
+            <label>
+                <input type="checkbox" id="soundToggle" checked> Sound
+            </label>
+            <label>
+                <input type="checkbox" id="musicToggle" checked> Music
+            </label>
+            <label>
+                <input type="checkbox" id="voiceToggle" checked> Voice
+            </label>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="timer-container">
+            <div class="timer-bar" id="timerBar"></div>
+        </div>
+
+        <div class="animal-name" id="animalName"></div>
+
+        <div class="options" id="options">
+            <!-- Options will be loaded here -->
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+
+        <div class="controls">
+            <button id="nextBtn" style="display:none;">Next Animal</button>
+            <button id="repeatBtn">Repeat Name</button>
+            <button id="pauseBtn">Pause</button>
+            <button id="finishBtn">Finish</button>
+        </div>
+    </div>
+
+    <div class="swipe-instruction" id="swipeInstruction">
+        Swipe left or right to choose an animal
+    </div>
+
+    <!-- Dashboard Section -->
+    <div class="dashboard" id="dashboard">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Progress Dashboard</h1>
+            <button class="close-dashboard" id="closeDashboard">Close Dashboard</button>
+        </div>
+
+        <div class="dashboard-tabs">
+            <div class="dashboard-tab active" data-tab="overview">Overview</div>
+            <div class="dashboard-tab" data-tab="sessions">Session History</div>
+            <div class="dashboard-tab" data-tab="animals">Animal Performance</div>
+            <div class="dashboard-tab" data-tab="notes">Notes</div>
+        </div>
+
+        <div class="tab-content active" id="overviewTab">
+            <div class="dashboard-section">
+                <h2 class="section-title">Overall Progress</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalSessions">0</div>
+                        <div class="stat-label">Total Sessions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avgScore">0%</div>
+                        <div class="stat-label">Average Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="bestScore">0%</div>
+                        <div class="stat-label">Best Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalTime">0m</div>
+                        <div class="stat-label">Total Time Played</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-section">
+                <h2 class="section-title">Progress Over Time</h2>
+                <div class="chart-container">
+                    <canvas id="progressChart"></canvas>
+                </div>
+            </div>
+
+            <div class="dashboard-section">
+                <h2 class="section-title">Recent Performance</h2>
+                <div class="chart-container">
+                    <canvas id="recentPerformanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="sessionsTab">
+            <div class="dashboard-section">
+                <h2 class="section-title">Session History</h2>
+                <table class="session-list" id="sessionTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Score</th>
+                            <th>Time</th>
+                            <th>Progress</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sessionTableBody">
+                        <!-- Sessions will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-content" id="animalsTab">
+            <div class="dashboard-section">
+                <h2 class="section-title">Animal Performance</h2>
+                <div class="chart-container">
+                    <canvas id="animalPerformanceChart"></canvas>
+                </div>
+                
+                <div class="animal-stats" id="animalStats">
+                    <!-- Animal stats will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="notesTab">
+            <div class="dashboard-section">
+                <h2 class="section-title">Session Notes</h2>
+                <div class="notes-section">
+                    <textarea class="notes-textarea" id="notesTextarea" placeholder="Add your notes about this session..."></textarea>
+                    <button class="save-notes-btn" id="saveNotesBtn">Save Notes</button>
+                </div>
+                
+                <div class="notes-list" id="notesList">
+                    <!-- Notes will be loaded here -->
+                </div>
+            </div>
+            
+            <button class="export-btn" id="exportDataBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z"/>
+                    <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                </svg>
+                Export Data
+            </button>
+        </div>
+    </div>
+
+    <audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
+    <audio id="incorrectSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+    <audio id="backgroundMusic" loop src="https://assets.mixkit.co/music/preview/mixkit-happy-times-158.mp3"></audio>
+    <audio id="transitionSound" src="https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3"></audio>
+    <audio id="calmSound" loop src="https://assets.mixkit.co/music/preview/mixkit-relaxing-meditation-4425.mp3"></audio>
+
+    <!-- Include Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
